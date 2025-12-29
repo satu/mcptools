@@ -1,15 +1,17 @@
 # MCP Tools Collection
 
-This repository contains Model Context Protocol (MCP) tools for use with Gemini CLI and other MCP clients.
+This repository contains a collection of Model Context Protocol (MCP) tools designed for use with Gemini CLI and other MCP-compatible clients.
 
 ## Available Tools
 
-### Trello Asset Downloader
-A tool to download authenticated assets from Trello URLs.
+1.  **Trello Asset Downloader**: Downloads authenticated assets (attachments) from Trello cards.
+2.  **Tmux Manager**: Manages tmux windows and panes (list, create, rename, send keys) directly from the agent.
 
 ## Installation
 
-1.  Make sure you have `python3` installed.
+The project provides an automated installation script.
+
+1.  Ensure you have `python3` and `pip` installed.
 2.  Run the installation script:
 
     ```bash
@@ -18,17 +20,19 @@ A tool to download authenticated assets from Trello URLs.
     ```
 
     This script will:
-    *   Create a virtual environment in `~/.local/share/mcptools/trello-downloader`.
-    *   Install required dependencies (`fastmcp`).
-    *   Create a launcher script at `~/bin/mcp-trello-downloader`.
+    *   Create dedicated virtual environments for each tool in `~/.local/share/mcptools/`.
+    *   Install all required dependencies.
+    *   Create launcher scripts in `~/bin/` (e.g., `mcp-trello-downloader`, `mcp-tmux-manager`).
+
+    **Note**: Ensure `~/bin` is in your system's `PATH`.
 
 ## Configuration
 
-To use these tools with the Gemini CLI, you need to update your `settings.json` file (usually located at `~/.gemini/settings.json` or similar, depending on your setup).
+To use these tools with the Gemini CLI, add the following to your `settings.json` (typically located at `~/.gemini/settings.json`).
 
-### Trello Asset Downloader Configuration
+### 1. Trello Asset Downloader
 
-Add the following entry to the `mcpServers` object in your `settings.json`:
+This tool requires Trello API credentials.
 
 ```json
 "mcpServers": {
@@ -42,15 +46,55 @@ Add the following entry to the `mcpServers` object in your `settings.json`:
 }
 ```
 
-**Note:** Replace `~/bin/mcp-trello-downloader` with the full absolute path if `~` expansion is not supported by your client (e.g., `/home/username/bin/mcp-trello-downloader`).
-
-### Getting Trello API Keys
-
+**Getting Trello API Keys:**
 1.  Log in to Trello.
-2.  Go to [https://trello.com/app-key](https://trello.com/app-key).
+2.  Visit [https://trello.com/app-key](https://trello.com/app-key).
 3.  Copy your **Personal Key** (`TRELLO_API_KEY`).
 4.  Click the "Token" link manually to generate a **Token** (`TRELLO_TOKEN`).
 
+*Alternatively, the tool supports a `.env` file in its installation directory.*
+
+### 2. Tmux Manager
+
+This tool interacts with your local `tmux` sessions.
+
+```json
+"mcpServers": {
+  "tmux-manager": {
+    "command": "~/bin/mcp-tmux-manager"
+  }
+}
+```
+
+**Requirements:**
+*   You must be running inside a `tmux` session or have a running `tmux` server accessible to the agent.
+*   The `tmux` executable must be in the system `PATH`.
+
 ## Usage
 
-Once configured, the tool will be available to the Gemini agent. You can ask it to "download the attachment from this Trello card URL" or similar commands.
+### Trello Downloader
+Ask the agent to download files from Trello URLs.
+*   "Download the attachment from this Trello card URL."
+*   "Get the image from the comment on card [ID]."
+
+### Tmux Manager
+Ask the agent to manage your workspace.
+*   "List all open tmux windows."
+*   "Create a new window named 'server' and run 'npm start'."
+*   "Rename the current window to 'logs'."
+*   "Close the window named 'temp'."
+
+## Development
+
+The project uses `fastmcp` to define tools.
+
+*   **Trello Tool**: `download_trello_asset/download_trello_asset.py`
+*   **Tmux Tool**: `tmux_manager/tmux_manager.py`
+
+### Running Tests
+Unit tests are available for all tools.
+
+```bash
+# Run all tests (requires tmux for integration tests)
+./venv/bin/python3 -m unittest discover -p "test_*.py"
+```

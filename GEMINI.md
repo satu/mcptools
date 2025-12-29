@@ -40,7 +40,13 @@ This tool allows listing windows and creating new windows in the current tmux se
 
 ### Functionality
 - `tmux_list_windows`: Lists all windows in the current session.
-- `tmux_new_window`: Opens a new window with a specified command. Can verify if the window should stay open after execution.
+- `tmux_new_window`: Opens a new window with a specified command.
+- `tmux_capture_pane`: Captures text content from a pane.
+- `tmux_split_window`: Splits a window into two panes.
+- `tmux_select_window`: Switches to a specific window.
+- `tmux_select_pane`: Focuses a specific pane.
+- `tmux_kill_window`: Closes a window.
+- `tmux_kill_pane`: Closes a pane.
 
 # Installation
 The project includes an `install.sh` script to install the tools locally.

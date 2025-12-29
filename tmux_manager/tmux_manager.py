@@ -112,5 +112,99 @@ def tmux_get_active_session_info() -> str:
     """Returns information about the current active tmux session."""
     return run_tmux_command(["display-message", "-p", "Session: #S, Window: #I (#W), Pane: #P"])
 
+@mcp.tool()
+def tmux_capture_pane(target_pane: str = None, start_line: str = None, end_line: str = None) -> str:
+    """
+    Captures text content from a tmux pane.
+    
+    Args:
+        target_pane: Optional target pane (e.g., '1', '1.0', '%2'). 
+                     Defaults to current pane if omitted.
+        start_line: Optional start line offset (e.g., '-100' for last 100 lines).
+        end_line: Optional end line offset.
+    """
+    args = ["capture-pane", "-p"]
+    if target_pane:
+        args.extend(["-t", target_pane])
+    if start_line is not None:
+        args.extend(["-S", str(start_line)])
+    if end_line is not None:
+        args.extend(["-E", str(end_line)])
+        
+    return run_tmux_command(args)
+
+@mcp.tool()
+def tmux_split_window(target_pane: str = None, direction: str = "vertical", command: str = None) -> str:
+    """
+    Splits a window into two panes.
+    
+    Args:
+        target_pane: Optional target pane to split. Defaults to current.
+        direction: 'vertical' (top/bottom) or 'horizontal' (left/right). Default: vertical.
+        command: Optional shell command to run in the new pane.
+    """
+    args = ["split-window"]
+    if direction == "horizontal":
+        args.append("-h")
+    else:
+        args.append("-v")
+        
+    if target_pane:
+        args.extend(["-t", target_pane])
+        
+    if command:
+        # If a command is provided, we pass it as a shell command to ensure it stays open if needed,
+        # but standard behavior is just to run it.
+        # Unlike new_window, split-window accepts command as final args.
+        args.append(command)
+        
+    output = run_tmux_command(args)
+    if "Error" in output:
+        return output
+    return "Split window successfully"
+
+@mcp.tool()
+def tmux_select_window(target_window: str) -> str:
+    """
+    Selects (switches to) a specific window.
+    
+    Args:
+        target_window: Target window identifier (e.g., '1', 'mysession:2', 'mywindow').
+    """
+    return run_tmux_command(["select-window", "-t", target_window])
+
+@mcp.tool()
+def tmux_select_pane(target_pane: str) -> str:
+    """
+    Selects (focuses) a specific pane.
+    
+    Args:
+        target_pane: Target pane identifier (e.g., '0', '%1').
+    """
+    return run_tmux_command(["select-pane", "-t", target_pane])
+
+@mcp.tool()
+def tmux_kill_window(target_window: str) -> str:
+    """
+    Kills (closes) a specific window.
+    
+    Args:
+        target_window: Target window identifier.
+    """
+    return run_tmux_command(["kill-window", "-t", target_window])
+
+@mcp.tool()
+def tmux_kill_pane(target_pane: str = None) -> str:
+    """
+    Kills (closes) a specific pane.
+    
+    Args:
+        target_pane: Optional target pane identifier. Defaults to current pane.
+    """
+    args = ["kill-pane"]
+    if target_pane:
+        args.extend(["-t", target_pane])
+    return run_tmux_command(args)
+
 if __name__ == "__main__":
     mcp.run(show_banner=False)

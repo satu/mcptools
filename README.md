@@ -82,7 +82,10 @@ Ask the agent to manage your workspace.
 *   "List all open tmux windows."
 *   "Create a new window named 'server' and run 'npm start'."
 *   "Rename the current window to 'logs'."
-*   "Close the window named 'temp'."
+*   "Split the current window vertically and run 'htop'."
+*   "Capture the last 20 lines from the 'build' pane."
+*   "Select window '1'."
+*   "Kill the window named 'temp'."
 
 ## Development
 

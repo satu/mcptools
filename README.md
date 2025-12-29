@@ -67,8 +67,11 @@ This tool interacts with your local `tmux` sessions.
 ```
 
 **Requirements:**
-*   You must be running inside a `tmux` session or have a running `tmux` server accessible to the agent.
 *   The `tmux` executable must be in the system `PATH`.
+
+**Session Management:**
+*   **Inside Tmux**: If the tool is running inside a tmux session, it operates on that session.
+*   **Outside Tmux**: It automatically creates and manages a dedicated session (`mcptools-session`), cleaning it up on exit if it created it.
 
 ## Usage
 

@@ -4,7 +4,7 @@ This repository contains a collection of Model Context Protocol (MCP) tools desi
 
 ## Available Tools
 
-1.  **Trello Asset Downloader**: Downloads authenticated assets (attachments) from Trello cards.
+1.  **Trello Asset Downloader**: Downloads authenticated assets (attachments) from Trello cards. This tool was created to complement `@delorenj/mcp-server-trello`, which currently lacks support for downloading images and other attachments from cards.
 2.  **Tmux Manager**: Manages tmux windows and panes (list, create, rename, send keys) directly from the agent.
 
 ## Installation

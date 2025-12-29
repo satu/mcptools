@@ -6,13 +6,13 @@ import sys
 # Add directory to path to import tmux_manager
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import tmux_manager
+from tmux_manager import tmux_manager as tool_module
 
 class TestTmuxExternalLogic(unittest.TestCase):
     
     def setUp(self):
         # Reset the global state
-        tmux_manager.CREATED_SESSION = False
+        tool_module.CREATED_SESSION = False
         
     @patch.dict(os.environ, {}, clear=True)
     @patch('subprocess.run')
@@ -23,13 +23,13 @@ class TestTmuxExternalLogic(unittest.TestCase):
             MagicMock(returncode=0)  # new-session -> success
         ]
         
-        tmux_manager.ensure_session()
+        tool_module.ensure_session()
         
-        self.assertTrue(tmux_manager.CREATED_SESSION)
+        self.assertTrue(tool_module.CREATED_SESSION)
         # Check calls
         args_list = [c.args[0] for c in mock_run.call_args_list]
-        self.assertIn(["tmux", "has-session", "-t", tmux_manager.MCP_SESSION_NAME], args_list)
-        self.assertIn(["tmux", "new-session", "-d", "-s", tmux_manager.MCP_SESSION_NAME], args_list)
+        self.assertIn(["tmux", "has-session", "-t", tool_module.MCP_SESSION_NAME], args_list)
+        self.assertIn(["tmux", "new-session", "-d", "-s", tool_module.MCP_SESSION_NAME], args_list)
 
     @patch.dict(os.environ, {}, clear=True)
     @patch('subprocess.run')
@@ -38,22 +38,22 @@ class TestTmuxExternalLogic(unittest.TestCase):
         mock_run.return_value = MagicMock(returncode=0)
         
         # Default target
-        target = tmux_manager.resolve_target()
-        self.assertEqual(target, f"{tmux_manager.MCP_SESSION_NAME}:")
+        target = tool_module.resolve_target()
+        self.assertEqual(target, f"{tool_module.MCP_SESSION_NAME}:")
         
         # Explicit target
-        target = tmux_manager.resolve_target("1")
-        self.assertEqual(target, f"{tmux_manager.MCP_SESSION_NAME}:1")
+        target = tool_module.resolve_target("1")
+        self.assertEqual(target, f"{tool_module.MCP_SESSION_NAME}:1")
         
         # Already qualified target
-        target = tmux_manager.resolve_target("othersession:1")
+        target = tool_module.resolve_target("othersession:1")
         self.assertEqual(target, "othersession:1")
 
     @patch.dict(os.environ, {"TMUX": "something"})
     def test_resolve_target_inside_tmux(self):
         # Should return raw target
-        self.assertIsNone(tmux_manager.resolve_target(None))
-        self.assertEqual(tmux_manager.resolve_target("1"), "1")
+        self.assertIsNone(tool_module.resolve_target(None))
+        self.assertEqual(tool_module.resolve_target("1"), "1")
         
     @patch.dict(os.environ, {}, clear=True)
     @patch('subprocess.run')
@@ -64,10 +64,10 @@ class TestTmuxExternalLogic(unittest.TestCase):
             MagicMock(stdout="output", returncode=0) # command
         ]
         
-        tmux_manager.run_tmux_command(["list-windows"])
+        tool_module.run_tmux_command(["list-windows"])
         
         # ensure_session calls has-session
-        self.assertEqual(mock_run.call_args_list[0].args[0], ["tmux", "has-session", "-t", tmux_manager.MCP_SESSION_NAME])
+        self.assertEqual(mock_run.call_args_list[0].args[0], ["tmux", "has-session", "-t", tool_module.MCP_SESSION_NAME])
         # run_tmux_command calls the command
         self.assertEqual(mock_run.call_args_list[1].args[0], ["tmux", "list-windows"])
 

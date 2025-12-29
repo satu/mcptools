@@ -77,14 +77,14 @@ echo "To configure Gemini CLI, add the following to your settings.json:"
 echo "---------------------------------------------------------------"
 echo '"mcpServers": {'
 echo '  "trello-downloader": {'
-echo '    "command": "'$BIN_DIR/$SCRIPT_NAME'",'
-    "env": {
-      "TRELLO_API_KEY": "your_trello_api_key",
-      "TRELLO_TOKEN": "your_trello_api_token"
-    }
+echo '    "command": "$HOME/bin/'$SCRIPT_NAME'",'
+echo '    "env": {'
+echo '      "TRELLO_API_KEY": "your_trello_api_key",'
+echo '      "TRELLO_TOKEN": "your_trello_api_token"'
+echo '    }'
 echo '  },'
 echo '  "tmux-manager": {'
-echo '    "command": "'$BIN_DIR/$TMUX_SCRIPT_NAME'"'
+echo '    "command": "$HOME/bin/'$TMUX_SCRIPT_NAME'"'
 echo '  }'
 echo '}'
 echo "---------------------------------------------------------------"

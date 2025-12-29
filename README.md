@@ -37,7 +37,7 @@ This tool requires Trello API credentials.
 ```json
 "mcpServers": {
   "trello-downloader": {
-    "command": "~/bin/mcp-trello-downloader",
+    "command": "$HOME/bin/mcp-trello-downloader",
     "env": {
       "TRELLO_API_KEY": "YOUR_TRELLO_API_KEY",
       "TRELLO_TOKEN": "YOUR_TRELLO_TOKEN"
@@ -61,7 +61,7 @@ This tool interacts with your local `tmux` sessions.
 ```json
 "mcpServers": {
   "tmux-manager": {
-    "command": "~/bin/mcp-tmux-manager"
+    "command": "$HOME/bin/mcp-tmux-manager"
   }
 }
 ```

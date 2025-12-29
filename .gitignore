@@ -1,0 +1,15 @@
+venv/
+__pycache__/
+*.pyc
+.env
+*.png
+comment_image.png
+description_image.png
+trello_download_test.png
+.gemini/
+tmp/
+firebase-debug.log
+input.json
+response.txt
+stderr.txt
+stdout.txt

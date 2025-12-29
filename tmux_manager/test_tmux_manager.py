@@ -3,13 +3,13 @@ import os
 import time
 import asyncio
 import unittest
+import subprocess
 from unittest.mock import patch
 
 # Add current directory to sys.path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Import the tool functions
-# Note: We import the decorated functions directly
 from tmux_manager import (
     tmux_list_windows, 
     tmux_new_window, 
@@ -20,7 +20,8 @@ from tmux_manager import (
     tmux_select_window,
     tmux_select_pane,
     tmux_kill_window,
-    tmux_kill_pane
+    tmux_kill_pane,
+    MCP_SESSION_NAME
 )
 
 def get_text(result):
@@ -34,16 +35,29 @@ def get_text(result):
 class TestTmuxManager(unittest.TestCase):
 
     @patch.dict(os.environ, {}, clear=True)
-    def test_not_in_tmux(self):
-        """Test that tools report error when TMUX env var is missing."""
-        # Ensure TMUX is removed from env for this test
-        if "TMUX" in os.environ:
-            del os.environ["TMUX"]
+    def test_external_session_creation(self):
+        """Test that tools create/use a session when TMUX env var is missing."""
+        print("\n[Test] test_external_session_creation (Mocked Env, Real Tmux)")
+        
+        # Ensure clean state
+        subprocess.run(["tmux", "kill-session", "-t", MCP_SESSION_NAME], capture_output=True)
+
+        try:
+            # This should trigger creation of MCP_SESSION_NAME
+            res = asyncio.run(tmux_list_windows.run({}))
+            text = get_text(res)
             
-        print("\n[Test] test_not_in_tmux (Mocked)")
-        res = asyncio.run(tmux_list_windows.run({}))
-        text = get_text(res)
-        self.assertIn("Error: Not running inside a tmux session", text)
+            # Should not be error
+            self.assertNotIn("Error:", text)
+            self.assertTrue(len(text) > 0)
+            
+            # Verify session exists
+            check = subprocess.run(["tmux", "has-session", "-t", MCP_SESSION_NAME], capture_output=True)
+            self.assertEqual(check.returncode, 0, "Session should have been created")
+            
+        finally:
+            # Cleanup
+            subprocess.run(["tmux", "kill-session", "-t", MCP_SESSION_NAME], capture_output=True)
 
     @unittest.skipIf(os.environ.get("TMUX") is None, "Skipping integration tests because not running inside tmux")
     def test_integration_workflow(self):
@@ -78,10 +92,8 @@ class TestTmuxManager(unittest.TestCase):
         self.assertIn("Split window successfully", text)
         time.sleep(0.5)
 
-        # 5. Capture Split Pane Content (the new pane should be active in that window or we target it)
-        # Note: Split window makes the new pane the active one in that window usually.
-        # But 'mcp-test' might target the window or the original pane depending on resolution.
-        # Let's verify we didn't crash.
+        # 5. Capture Split Pane Content
+        # (Optional additional checks could go here)
 
         # 6. Rename Window
         print("  - Renaming window to 'mcp-renamed'...")

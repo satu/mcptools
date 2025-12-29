@@ -48,6 +48,10 @@ This tool allows listing windows and creating new windows in the current tmux se
 - `tmux_kill_window`: Closes a window.
 - `tmux_kill_pane`: Closes a pane.
 
+**Session Management:**
+- If the tool is running inside a tmux session, it operates on that session.
+- If running outside tmux, it automatically creates and manages a dedicated session (`mcptools-session`), cleaning it up on exit if it created it.
+
 # Installation
 The project includes an `install.sh` script to install the tools locally.
 ```bash

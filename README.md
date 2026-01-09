@@ -1,6 +1,6 @@
 # MCP Tools Collection
 
-This repository contains a collection of Model Context Protocol (MCP) tools designed for use with Gemini CLI and other MCP-compatible clients.
+This repository contains a collection of Model Context Protocol (MCP) tools designed for use with Claude Code, Gemini CLI, and other MCP-compatible clients.
 
 ## Available Tools
 
@@ -28,9 +28,32 @@ The project provides an automated installation script.
 
 ## Configuration
 
-To use these tools with the Gemini CLI, add the following to your `settings.json` (typically located at `~/.gemini/settings.json`).
+### Claude Code
 
-### 1. Trello Asset Downloader
+Use the `claude mcp add` command with **absolute paths** (not `$HOME` or `~`):
+
+```bash
+# Tmux Manager
+claude mcp add tmux-manager /home/YOUR_USER/bin/mcp-tmux-manager --scope user
+
+# Trello Asset Downloader (with environment variables)
+claude mcp add trello-downloader /home/YOUR_USER/bin/mcp-trello-downloader --scope user \
+  -e TRELLO_API_KEY=YOUR_TRELLO_API_KEY \
+  -e TRELLO_TOKEN=YOUR_TRELLO_TOKEN
+```
+
+**Important**: Claude Code does not expand `$HOME` or `~` in paths. Always use absolute paths.
+
+Verify the configuration:
+```bash
+claude mcp list
+```
+
+### Gemini CLI
+
+Add the following to your `settings.json` (typically located at `~/.gemini/settings.json`).
+
+#### Trello Asset Downloader
 
 This tool requires Trello API credentials.
 
@@ -54,7 +77,7 @@ This tool requires Trello API credentials.
 
 *Alternatively, the tool supports a `.env` file in its installation directory.*
 
-### 2. Tmux Manager
+#### Tmux Manager
 
 This tool interacts with your local `tmux` sessions.
 

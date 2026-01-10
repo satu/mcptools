@@ -54,3 +54,4 @@ Trello tool requires:
 
 Audio transcriber:
 - `WHISPER_MODEL` (optional, defaults to `base`)
+- Requires `ffmpeg` to be installed on the system

@@ -82,6 +82,9 @@ This tool requires Trello API credentials.
 
 *Alternatively, the tool supports a `.env` file in its installation directory.*
 
+**Available Tools:**
+*   `download_trello_asset(url, output_path)` - Download an authenticated asset from Trello
+
 #### Tmux Manager
 
 This tool interacts with your local `tmux` sessions.
@@ -101,6 +104,19 @@ This tool interacts with your local `tmux` sessions.
 *   **Inside Tmux**: If the tool is running inside a tmux session, it operates on that session.
 *   **Outside Tmux**: It automatically creates and manages a dedicated session (`mcptools-session`), cleaning it up on exit if it created it.
 
+**Available Tools:**
+*   `tmux_list_windows()` - List all windows in the current session
+*   `tmux_new_window(command, name?, keep_open?)` - Open a new window and run a command
+*   `tmux_rename_window(new_name, target_window?)` - Rename a window
+*   `tmux_send_keys(keys, target_pane?)` - Send keys to a pane
+*   `tmux_get_active_session_info()` - Get info about the current session
+*   `tmux_capture_pane(target_pane?, start_line?, end_line?)` - Capture pane content
+*   `tmux_split_window(target_pane?, direction?, command?)` - Split a window
+*   `tmux_select_window(target_window)` - Switch to a window
+*   `tmux_select_pane(target_pane)` - Focus a pane
+*   `tmux_kill_window(target_window)` - Close a window
+*   `tmux_kill_pane(target_pane?)` - Close a pane
+
 #### Audio Transcriber
 
 This tool transcribes audio files using OpenAI Whisper.
@@ -116,10 +132,17 @@ This tool transcribes audio files using OpenAI Whisper.
 }
 ```
 
+**Requirements:**
+*   `ffmpeg` must be installed and in the system `PATH` (used by Whisper for audio processing).
+
 **Environment Variables:**
 *   `WHISPER_MODEL`: Whisper model size (default: `base`). Options: `tiny`, `base`, `small`, `medium`, `large`.
 
 **Supported Audio Formats:** `.opus`, `.ogg`, `.m4a`, `.mp3`, `.wav`, `.webm`, `.flac`, `.aac`
+
+**Available Tools:**
+*   `transcribe_audio(url, language?)` - Transcribe audio from a public URL
+*   `transcribe_local_audio(file_path, language?)` - Transcribe a local audio file
 
 **Note:** For authenticated URLs (e.g., Trello attachments), download the file first using the appropriate tool (e.g., `trello-downloader`) and use the local file transcription.
 

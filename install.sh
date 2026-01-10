@@ -69,6 +69,40 @@ EOF
 
 chmod +x "$BIN_DIR/$TMUX_SCRIPT_NAME"
 
+# --- Audio Transcriber Installation ---
+AUDIO_INSTALL_DIR="$HOME/.local/share/mcptools/audio-transcriber"
+AUDIO_SCRIPT_NAME="mcp-audio-transcriber"
+
+echo ""
+echo "Installing Audio Transcriber..."
+
+# Create directories
+mkdir -p "$AUDIO_INSTALL_DIR"
+
+# Copy files
+echo "Copying files to $AUDIO_INSTALL_DIR..."
+cp audio_transcriber/audio_transcriber.py "$AUDIO_INSTALL_DIR/"
+cp audio_transcriber/requirements.txt "$AUDIO_INSTALL_DIR/"
+
+# Set up virtual environment
+echo "Setting up virtual environment for Audio Transcriber..."
+if [ ! -d "$AUDIO_INSTALL_DIR/venv" ]; then
+    python3 -m venv "$AUDIO_INSTALL_DIR/venv"
+fi
+
+# Install dependencies
+echo "Installing dependencies (this may take a while for Whisper)..."
+"$AUDIO_INSTALL_DIR/venv/bin/pip" install -r "$AUDIO_INSTALL_DIR/requirements.txt"
+
+# Create launcher script
+echo "Creating launcher in $BIN_DIR/$AUDIO_SCRIPT_NAME..."
+cat > "$BIN_DIR/$AUDIO_SCRIPT_NAME" << EOF
+#!/bin/bash
+exec "$AUDIO_INSTALL_DIR/venv/bin/python" "$AUDIO_INSTALL_DIR/audio_transcriber.py" "\$@"
+EOF
+
+chmod +x "$BIN_DIR/$AUDIO_SCRIPT_NAME"
+
 echo ""
 echo "Installation complete!"
 echo "Tools have been installed to $BIN_DIR"
@@ -85,6 +119,14 @@ echo '    }'
 echo '  },'
 echo '  "tmux-manager": {'
 echo '    "command": "$HOME/bin/'$TMUX_SCRIPT_NAME'"'
+echo '  },'
+echo '  "audio-transcriber": {'
+echo '    "command": "$HOME/bin/'$AUDIO_SCRIPT_NAME'",'
+echo '    "env": {'
+echo '      "TRELLO_API_KEY": "your_trello_api_key",'
+echo '      "TRELLO_TOKEN": "your_trello_api_token",'
+echo '      "WHISPER_MODEL": "base"'
+echo '    }'
 echo '  }'
 echo '}'
 echo "---------------------------------------------------------------"

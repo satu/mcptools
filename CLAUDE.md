@@ -52,6 +52,5 @@ Trello tool requires:
 - `TRELLO_API_KEY`
 - `TRELLO_TOKEN`
 
-Audio transcriber requires:
-- `TRELLO_API_KEY` and `TRELLO_TOKEN` (for Trello attachment URLs)
+Audio transcriber:
 - `WHISPER_MODEL` (optional, defaults to `base`)

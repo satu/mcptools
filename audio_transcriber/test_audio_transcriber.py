@@ -40,16 +40,6 @@ class TestAudioTranscriber(unittest.TestCase):
         self.assertIn("Unsupported audio format", text)
         print("\nPASSED: Unsupported format test")
 
-    @patch.dict(os.environ, {}, clear=True)
-    def test_missing_trello_credentials(self):
-        """Test that Trello URLs require credentials."""
-        res = asyncio.run(tool_module.transcribe_audio.run({
-            "url": "https://trello.com/attachments/audio.mp3"
-        }))
-        text = get_text(res)
-        self.assertIn("TRELLO_API_KEY", text)
-        print("\nPASSED: Missing Trello credentials test")
-
     def test_local_file_not_found(self):
         """Test that non-existent local files are handled."""
         res = asyncio.run(tool_module.transcribe_local_audio.run({
@@ -75,7 +65,6 @@ class TestAudioTranscriber(unittest.TestCase):
         finally:
             os.remove(tmp_path)
 
-    @patch.dict(os.environ, {"TRELLO_API_KEY": "fake_key", "TRELLO_TOKEN": "fake_token"})
     @patch("urllib.request.urlopen")
     @patch.object(tool_module, "get_model")
     def test_transcribe_url_success(self, mock_get_model, mock_urlopen):
@@ -92,7 +81,7 @@ class TestAudioTranscriber(unittest.TestCase):
         mock_get_model.return_value = mock_model
 
         res = asyncio.run(tool_module.transcribe_audio.run({
-            "url": "https://trello.com/attachments/voice_note.mp3"
+            "url": "https://example.com/voice_note.mp3"
         }))
         text = get_text(res)
 

@@ -6,7 +6,7 @@ This repository contains a collection of Model Context Protocol (MCP) tools desi
 
 1.  **Trello Asset Downloader**: Downloads authenticated assets (attachments) from Trello cards. This tool was created to complement `@delorenj/mcp-server-trello`, which currently lacks support for downloading images and other attachments from cards.
 2.  **Tmux Manager**: Manages tmux windows and panes (list, create, rename, send keys) directly from the agent.
-3.  **Audio Transcriber**: Transcribes audio files using OpenAI Whisper. Supports Trello attachment URLs and local files. Useful for processing voice notes attached to Trello cards.
+3.  **Audio Transcriber**: Transcribes audio files using OpenAI Whisper. Supports public URLs and local files. For authenticated sources (e.g., Trello), download the file first with the appropriate tool.
 
 ## Installation
 
@@ -44,8 +44,6 @@ claude mcp add trello-downloader /home/YOUR_USER/bin/mcp-trello-downloader --sco
 
 # Audio Transcriber (with environment variables)
 claude mcp add audio-transcriber /home/YOUR_USER/bin/mcp-audio-transcriber --scope user \
-  -e TRELLO_API_KEY=YOUR_TRELLO_API_KEY \
-  -e TRELLO_TOKEN=YOUR_TRELLO_TOKEN \
   -e WHISPER_MODEL=base
 ```
 
@@ -112,8 +110,6 @@ This tool transcribes audio files using OpenAI Whisper.
   "audio-transcriber": {
     "command": "$HOME/bin/mcp-audio-transcriber",
     "env": {
-      "TRELLO_API_KEY": "YOUR_TRELLO_API_KEY",
-      "TRELLO_TOKEN": "YOUR_TRELLO_TOKEN",
       "WHISPER_MODEL": "base"
     }
   }
@@ -121,10 +117,11 @@ This tool transcribes audio files using OpenAI Whisper.
 ```
 
 **Environment Variables:**
-*   `TRELLO_API_KEY` / `TRELLO_TOKEN`: Required for transcribing Trello attachment URLs.
 *   `WHISPER_MODEL`: Whisper model size (default: `base`). Options: `tiny`, `base`, `small`, `medium`, `large`.
 
 **Supported Audio Formats:** `.opus`, `.ogg`, `.m4a`, `.mp3`, `.wav`, `.webm`, `.flac`, `.aac`
+
+**Note:** For authenticated URLs (e.g., Trello attachments), download the file first using the appropriate tool (e.g., `trello-downloader`) and use the local file transcription.
 
 ## Usage
 
@@ -145,10 +142,10 @@ Ask the agent to manage your workspace.
 
 ### Audio Transcriber
 Ask the agent to transcribe audio files.
-*   "Transcribe the voice note attached to this Trello card."
 *   "What does the audio file at [URL] say?"
 *   "Transcribe the local audio file at /path/to/recording.mp3"
 *   "Transcribe this audio in Italian." (specify language)
+*   For Trello voice notes: first download with trello-downloader, then transcribe the local file.
 
 ## Development
 

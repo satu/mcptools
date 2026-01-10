@@ -43,7 +43,7 @@ def transcribe_audio(url: str, language: str = None) -> str:
     Transcribes audio from a URL using OpenAI Whisper.
 
     Args:
-        url: URL to the audio file (supports Trello attachment URLs)
+        url: URL to the audio file
         language: Optional language code (e.g., 'en', 'es', 'it'). If not provided, Whisper auto-detects.
 
     Returns:
@@ -51,7 +51,8 @@ def transcribe_audio(url: str, language: str = None) -> str:
 
     Supported formats: .opus, .ogg, .m4a, .mp3, .wav, .webm, .flac, .aac
 
-    For Trello attachments, requires TRELLO_API_KEY and TRELLO_TOKEN environment variables.
+    Note: For authenticated URLs (e.g., Trello attachments), download the file first
+    using the appropriate tool (e.g., trello-downloader) and use transcribe_local_audio.
     """
     try:
         # Check file extension
@@ -59,17 +60,7 @@ def transcribe_audio(url: str, language: str = None) -> str:
         if ext and ext not in SUPPORTED_FORMATS:
             return f"Error: Unsupported audio format '{ext}'. Supported formats: {', '.join(sorted(SUPPORTED_FORMATS))}"
 
-        # Prepare headers for Trello authentication if needed
         headers = {"User-Agent": "MCP-Audio-Transcriber"}
-
-        if "trello.com" in url or "trello-attachments" in url:
-            key = os.environ.get("TRELLO_API_KEY")
-            token = os.environ.get("TRELLO_TOKEN")
-
-            if not key or not token:
-                return "Error: TRELLO_API_KEY and TRELLO_TOKEN environment variables must be set for Trello URLs."
-
-            headers["Authorization"] = f'OAuth oauth_consumer_key="{key}", oauth_token="{token}"'
 
         # Download the audio file to a temp location
         with tempfile.NamedTemporaryFile(suffix=ext or '.audio', delete=False) as tmp_file:

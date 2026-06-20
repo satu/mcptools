@@ -6,7 +6,6 @@ This repository contains a collection of Model Context Protocol (MCP) tools desi
 
 1.  **Trello Asset Downloader**: Downloads authenticated assets (attachments) from Trello cards. This tool was created to complement `@delorenj/mcp-server-trello`, which currently lacks support for downloading images and other attachments from cards.
 2.  **Tmux Manager**: Manages tmux windows and panes (list, create, rename, send keys) directly from the agent.
-3.  **Audio Transcriber**: Transcribes audio files using OpenAI Whisper. Supports public URLs and local files. For authenticated sources (e.g., Trello), download the file first with the appropriate tool.
 
 ## Installation
 
@@ -23,7 +22,7 @@ The project provides an automated installation script.
     This script will:
     *   Create dedicated virtual environments for each tool in `~/.local/share/mcptools/`.
     *   Install all required dependencies.
-    *   Create launcher scripts in `~/bin/` (e.g., `mcp-trello-downloader`, `mcp-tmux-manager`, `mcp-audio-transcriber`).
+    *   Create launcher scripts in `~/bin/` (e.g., `mcp-trello-downloader`, `mcp-tmux-manager`).
 
     **Note**: Ensure `~/bin` is in your system's `PATH`.
 
@@ -41,10 +40,6 @@ claude mcp add tmux-manager /home/YOUR_USER/bin/mcp-tmux-manager --scope user
 claude mcp add trello-downloader /home/YOUR_USER/bin/mcp-trello-downloader --scope user \
   -e TRELLO_API_KEY=YOUR_TRELLO_API_KEY \
   -e TRELLO_TOKEN=YOUR_TRELLO_TOKEN
-
-# Audio Transcriber (with environment variables)
-claude mcp add audio-transcriber /home/YOUR_USER/bin/mcp-audio-transcriber --scope user \
-  -e WHISPER_MODEL=base
 ```
 
 **Important**: Claude Code does not expand `$HOME` or `~` in paths. Always use absolute paths.
@@ -117,35 +112,6 @@ This tool interacts with your local `tmux` sessions.
 *   `tmux_kill_window(target_window)` - Close a window
 *   `tmux_kill_pane(target_pane?)` - Close a pane
 
-#### Audio Transcriber
-
-This tool transcribes audio files using OpenAI Whisper.
-
-```json
-"mcpServers": {
-  "audio-transcriber": {
-    "command": "$HOME/bin/mcp-audio-transcriber",
-    "env": {
-      "WHISPER_MODEL": "base"
-    }
-  }
-}
-```
-
-**Requirements:**
-*   `ffmpeg` must be installed and in the system `PATH` (used by Whisper for audio processing).
-
-**Environment Variables:**
-*   `WHISPER_MODEL`: Whisper model size (default: `base`). Options: `tiny`, `base`, `small`, `medium`, `large`.
-
-**Supported Audio Formats:** `.opus`, `.ogg`, `.m4a`, `.mp3`, `.wav`, `.webm`, `.flac`, `.aac`
-
-**Available Tools:**
-*   `transcribe_audio(url, language?)` - Transcribe audio from a public URL
-*   `transcribe_local_audio(file_path, language?)` - Transcribe a local audio file
-
-**Note:** For authenticated URLs (e.g., Trello attachments), download the file first using the appropriate tool (e.g., `trello-downloader`) and use the local file transcription.
-
 ## Usage
 
 ### Trello Downloader
@@ -163,20 +129,12 @@ Ask the agent to manage your workspace.
 *   "Select window '1'."
 *   "Kill the window named 'temp'."
 
-### Audio Transcriber
-Ask the agent to transcribe audio files.
-*   "What does the audio file at [URL] say?"
-*   "Transcribe the local audio file at /path/to/recording.mp3"
-*   "Transcribe this audio in Italian." (specify language)
-*   For Trello voice notes: first download with trello-downloader, then transcribe the local file.
-
 ## Development
 
 The project uses `fastmcp` to define tools.
 
 *   **Trello Tool**: `download_trello_asset/download_trello_asset.py`
 *   **Tmux Tool**: `tmux_manager/tmux_manager.py`
-*   **Audio Tool**: `audio_transcriber/audio_transcriber.py`
 
 ### Running Tests
 Unit tests are available for all tools.

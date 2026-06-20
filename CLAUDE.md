@@ -7,7 +7,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A collection of Model Context Protocol (MCP) tools built with Python and `fastmcp`. Currently includes:
 - **Trello Asset Downloader** (`download_trello_asset/`) - Downloads authenticated attachments from Trello
 - **Tmux Manager** (`tmux_manager/`) - Manages tmux windows and panes from an MCP client
-- **Audio Transcriber** (`audio_transcriber/`) - Transcribes audio files using OpenAI Whisper
 
 ## Commands
 
@@ -18,12 +17,10 @@ A collection of Model Context Protocol (MCP) tools built with Python and `fastmc
 # Run a specific test file
 ./venv/bin/python3 -m unittest download_trello_asset/test_trello_downloader.py
 ./venv/bin/python3 -m unittest tmux_manager/test_tmux_manager_unit.py
-./venv/bin/python3 -m unittest audio_transcriber/test_audio_transcriber.py
 
 # Run an MCP server directly (for testing)
 ./venv/bin/python3 download_trello_asset/download_trello_asset.py
 ./venv/bin/python3 tmux_manager/tmux_manager.py
-./venv/bin/python3 audio_transcriber/audio_transcriber.py
 
 # Install tools locally (creates launchers in ~/bin/)
 ./install.sh
@@ -51,7 +48,3 @@ The `resolve_target()` function handles target qualification for both modes.
 Trello tool requires:
 - `TRELLO_API_KEY`
 - `TRELLO_TOKEN`
-
-Audio transcriber:
-- `WHISPER_MODEL` (optional, defaults to `base`)
-- Requires `ffmpeg` to be installed on the system

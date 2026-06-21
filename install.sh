@@ -35,40 +35,6 @@ EOF
 
 chmod +x "$BIN_DIR/$SCRIPT_NAME"
 
-# --- Tmux Manager Installation ---
-TMUX_INSTALL_DIR="$HOME/.local/share/mcptools/tmux-manager"
-TMUX_SCRIPT_NAME="mcp-tmux-manager"
-
-echo ""
-echo "Installing Tmux Manager..."
-
-# Create directories
-mkdir -p "$TMUX_INSTALL_DIR"
-
-# Copy files
-echo "Copying files to $TMUX_INSTALL_DIR..."
-cp tmux_manager/tmux_manager.py "$TMUX_INSTALL_DIR/"
-cp tmux_manager/requirements.txt "$TMUX_INSTALL_DIR/"
-
-# Set up virtual environment
-echo "Setting up virtual environment for Tmux Manager..."
-if [ ! -d "$TMUX_INSTALL_DIR/venv" ]; then
-    python3 -m venv "$TMUX_INSTALL_DIR/venv"
-fi
-
-# Install dependencies
-echo "Installing dependencies..."
-"$TMUX_INSTALL_DIR/venv/bin/pip" install -r "$TMUX_INSTALL_DIR/requirements.txt"
-
-# Create launcher script
-echo "Creating launcher in $BIN_DIR/$TMUX_SCRIPT_NAME..."
-cat > "$BIN_DIR/$TMUX_SCRIPT_NAME" << EOF
-#!/bin/bash
-exec "$TMUX_INSTALL_DIR/venv/bin/python" "$TMUX_INSTALL_DIR/tmux_manager.py" "\$@"
-EOF
-
-chmod +x "$BIN_DIR/$TMUX_SCRIPT_NAME"
-
 echo ""
 echo "Installation complete!"
 echo "Tools have been installed to $BIN_DIR"
@@ -82,9 +48,6 @@ echo '    "env": {'
 echo '      "TRELLO_API_KEY": "your_trello_api_key",'
 echo '      "TRELLO_TOKEN": "your_trello_api_token"'
 echo '    }'
-echo '  },'
-echo '  "tmux-manager": {'
-echo '    "command": "$HOME/bin/'$TMUX_SCRIPT_NAME'"'
 echo '  }'
 echo '}'
 echo "---------------------------------------------------------------"

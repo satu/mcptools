@@ -36,7 +36,7 @@ class TestAudioTranscriberRemoved(unittest.TestCase):
             )
 
     def test_docs_have_no_references(self):
-        for doc in ("README.md", "CLAUDE.md"):
+        for doc in ("README.md", "CLAUDE.md", "GEMINI.md"):
             text = _read(doc)
             for needle in ("audio_transcriber", "audio-transcriber", "Audio Transcriber"):
                 self.assertNotIn(
